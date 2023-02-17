@@ -32,8 +32,9 @@ for i in range(n_epochs):
         loss = criterion(model(X), y)
         loss.backward()
         optimizer.step()
-
-la = Laplace(model, 'regression', subset_of_weights='all', hessian_structure='full')
+# choices for weight subsets:'all', 'subnetwork', 'last_layer'
+# choices for hessian: 'full', 'kron', 'lowrank' and 'diag'
+la = Laplace(model, 'regression', subset_of_weights='last_layer', hessian_structure='diag')
 la.fit(train_loader)
 log_prior, log_sigma = torch.ones(1, requires_grad=True), torch.ones(1, requires_grad=True)
 hyper_optimizer = torch.optim.Adam([log_prior, log_sigma], lr=1e-1)
